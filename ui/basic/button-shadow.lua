@@ -1,22 +1,22 @@
 local G2L = {};
 
--- StarterGui.button
+-- StarterGui.button-shadow
 G2L["1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
-G2L["1"]["Name"] = [[button]];
+G2L["1"]["Name"] = [[button-shadow]];
 G2L["1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
 
 
--- StarterGui.button.button
+-- StarterGui.button-shadow.button-shadow
 G2L["2"] = Instance.new("Frame", G2L["1"]);
 G2L["2"]["BorderSizePixel"] = 0;
 G2L["2"]["BackgroundColor3"] = Color3.fromRGB(44, 44, 44);
 G2L["2"]["Size"] = UDim2.new(0, 150, 0, 50);
-G2L["2"]["Position"] = UDim2.new(0.43523, 0, 0.20225, 0);
+G2L["2"]["Position"] = UDim2.new(0.43523, 0, 0.27715, 0);
 G2L["2"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-G2L["2"]["Name"] = [[button]];
+G2L["2"]["Name"] = [[button-shadow]];
 
 
--- StarterGui.button.button.TextLabel
+-- StarterGui.button-shadow.button-shadow.TextLabel
 G2L["3"] = Instance.new("TextLabel", G2L["2"]);
 G2L["3"]["TextWrapped"] = true;
 G2L["3"]["BorderSizePixel"] = 0;
@@ -31,7 +31,7 @@ G2L["3"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
 G2L["3"]["Position"] = UDim2.new(0.09333, 0, 0.2, 0);
 
 
--- StarterGui.button.button.hitbox
+-- StarterGui.button-shadow.button-shadow.hitbox
 G2L["4"] = Instance.new("TextButton", G2L["2"]);
 G2L["4"]["BorderSizePixel"] = 0;
 G2L["4"]["TextTransparency"] = 1;
@@ -43,6 +43,11 @@ G2L["4"]["BackgroundTransparency"] = 1;
 G2L["4"]["Size"] = UDim2.new(0, 150, 0, 50);
 G2L["4"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
 G2L["4"]["Name"] = [[hitbox]];
+
+
+-- StarterGui.button-shadow.button-shadow.UIShadow
+G2L["5"] = Instance.new("UIShadow", G2L["2"]);
+
 
 
 
