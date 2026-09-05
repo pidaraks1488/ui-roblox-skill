@@ -85,52 +85,89 @@ Reference implementations live under `ui/basic/`:
 
 ## Installation & Setup
 
-Pick the command for whatever tool or editor you use:
-
 ### Claude Code
+
+**macOS / Linux:**
 ```bash
 git clone https://github.com/pidaraks1488/ui-roblox-skill.git ~/.claude/skills/ui-roblox-skill
 ```
 
+**Windows (PowerShell):**
+```powershell
+git clone https://github.com/pidaraks1488/ui-roblox-skill.git "$HOME\.claude\skills\ui-roblox-skill"
+```
+
+---
+
 ### Antigravity / Gemini CLI
+
+**macOS / Linux:**
 ```bash
 git clone https://github.com/pidaraks1488/ui-roblox-skill.git ~/.gemini/config/skills/ui-roblox-skill
 ```
 
-### Cursor
-Add as project rules so Cursor automatically follows this style for Roblox UI:
-```bash
-# Classic .cursorrules
-curl -s https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md -o .cursorrules
-
-# Modern Cursor rules directory
-mkdir -p .cursor/rules && curl -s https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md -o .cursor/rules/ui-roblox.mdc
+**Windows (PowerShell):**
+```powershell
+git clone https://github.com/pidaraks1488/ui-roblox-skill.git "$HOME\.gemini\config\skills\ui-roblox-skill"
 ```
 
+---
+
+### Cursor
+
+Add as a project rule so Cursor references it for Roblox UI tasks:
+
+**Bash / macOS / Linux:**
+```bash
+curl -s https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md -o .cursorrules
+```
+
+**Windows (PowerShell):**
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md" -OutFile .cursorrules
+```
+
+---
+
 ### Windsurf / Cascade
+
 ```bash
 curl -s https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md -o .windsurfrules
 ```
 
+---
+
 ### GitHub Copilot
+
 ```bash
 mkdir -p .github && curl -s https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md -o .github/copilot-instructions.md
 ```
 
+---
+
 ### Aider
+
 ```bash
 aider --read https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md
 ```
 
-### ChatGPT / Claude Web / Web LLMs
-One-liner to copy the entire prompt directly to your clipboard:
+---
+
+### ChatGPT / Claude Web / Generic LLMs
+
+Copy the raw prompt directly to your clipboard:
+
+**macOS:**
 ```bash
-# macOS
 curl -s https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md | pbcopy
+```
 
-# Linux
+**Linux:**
+```bash
 curl -s https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md | xclip -selection clipboard
+```
 
-# Windows (PowerShell)
+**Windows (PowerShell):**
+```powershell
 (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md").Content | Set-Clipboard
 ```
