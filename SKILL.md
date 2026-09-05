@@ -5,34 +5,34 @@ description: Generates clean, flat, dark Roblox UI in Luau without UICorner, gra
 
 # UI Roblox Skill
 
-Правила генерации интерфейсов для Roblox Studio на Luau (`Instance.new`).
+Guidelines for generating Luau UI code (`Instance.new`) for Roblox Studio.
 
-Цель: строгий минималистичный флэт-дизайн вместо типичных ошибок нейросетей (никаких огромных скруглений, градиентов и ядовитых цветов).
+The goal is to maintain a strict, minimal, flat dark design instead of typical AI errors (no massive corner roundings, no random gradients, no neon palettes).
 
-## Основные правила
+## Rules
 
-1. **Без скруглений:** не добавлять `UICorner`. Все элементы имеют строгие прямоугольные углы.
-2. **Без рамок:** всегда указывать `BorderSizePixel = 0` на всех инстансах (`Frame`, `TextButton`, `TextLabel`).
-3. **Без градиентов:** не использовать `UIGradient`.
-4. **Тени:** для глубины использовать `Instance.new("UIShadow", parent)`. Не делать псевдо-тени через полупрозрачные фреймы.
-5. **Цвета:**
-   - Основной фон панелей и кнопок: `Color3.fromRGB(44, 44, 44)`
-   - Темный фон / подложка: `Color3.fromRGB(30, 30, 30)`
-   - Основной текст: `Color3.fromRGB(228, 228, 228)`
-   - Вторичный текст: `Color3.fromRGB(160, 160, 160)`
-   - Заливка баров: `Color3.fromRGB(70, 70, 70)` или нейтральный акцент
-6. **Шрифт:**
-   - Основной: `Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)`
-   - Для мелкого текста: `Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)`
+1. **No UICorner:** Do not add `UICorner`. All elements must have sharp 90-degree corners.
+2. **Zero borders:** Set `BorderSizePixel = 0` on every UI instance (`Frame`, `TextButton`, `TextLabel`, etc.).
+3. **No UIGradient:** Do not use `UIGradient`.
+4. **Depth:** For drop shadows, use native `Instance.new("UIShadow", parent)`. Never create fake blurred background frames.
+5. **Color Palette:**
+   - Panel & button surface: `Color3.fromRGB(44, 44, 44)`
+   - Dark well / background: `Color3.fromRGB(30, 30, 30)`
+   - Primary text: `Color3.fromRGB(228, 228, 228)`
+   - Muted text: `Color3.fromRGB(160, 160, 160)`
+   - Bar fill: `Color3.fromRGB(70, 70, 70)` or neutral accent
+6. **Fonts:**
+   - Primary: `Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)`
+   - Small / body text: `Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)`
 
-## Паттерн кнопки (Hitbox)
+## Button Pattern (Hitbox)
 
-Кнопка никогда не делается одиночным `TextButton`. Она всегда состоит из трех частей:
-1. `Frame` — видимый корпус кнопки (размер, позиция, цвет `44, 44, 44`, нулевая рамка).
-2. `TextLabel` — дочерний элемент фрейма с текстом.
-3. `TextButton` с именем `hitbox` — дочерний элемент фрейма, перекрывающий его целиком (`Size = UDim2.new(1, 0, 1, 0)`), с `BackgroundTransparency = 1` и `TextTransparency = 1`. Логика клика вешается на `hitbox.MouseButton1Click`.
+Never use a bare `TextButton` for styled buttons. A button always consists of three parts:
+1. `Frame` — The visible button body (size, position, color `44, 44, 44`, `BorderSizePixel = 0`).
+2. `TextLabel` — Child of the Frame for text content.
+3. `TextButton` named `hitbox` — Child of the Frame covering it entirely (`Size = UDim2.new(1, 0, 1, 0)`), with `BackgroundTransparency = 1` and `TextTransparency = 1`. Click events bind to `hitbox.MouseButton1Click`.
 
-### Шаблон кнопки:
+### Button Recipe:
 ```lua
 local button = Instance.new("Frame")
 button.Name = "Button"
@@ -59,7 +59,7 @@ hitbox.TextTransparency = 1
 hitbox.BorderSizePixel = 0
 ```
 
-### Шаблон бара (Health/XP/Progress):
+### Progress Bar Recipe:
 ```lua
 local barBg = Instance.new("Frame")
 barBg.Name = "BarBackground"
@@ -74,6 +74,6 @@ barFill.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 barFill.BorderSizePixel = 0
 ```
 
-## Требования к коду
-- Выдавать чистый рабочий Luau без лишней воды и без бесполезных комментариев к каждой строчке.
-- Не выдумывать скруглений, если пользователь прямо об этом не попросил.
+## Output Expectations
+- Return clean, executable Luau code without conversational filler or redundant line-by-line comments.
+- Do not introduce rounded corners unless specifically asked by the user.
