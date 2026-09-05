@@ -1,25 +1,25 @@
 # ui-roblox-skill
 
-Скилл и база готовых компонентов для Roblox Studio (Luau).
+A Luau component reference and LLM skill for Roblox Studio.
 
-Основная цель — отучить нейросети (Claude, ChatGPT, Cursor и др.) генерировать дефолтный мыльный UI со скруглениями (`UICorner`), радужными градиентами и кривой структурой. Вместо этого код пишется в едином строгом флэт-стиле: темная палитра, острые углы, аккуратные тени через `UIShadow` и разделение визуала с логикой.
+Stops models (Claude, Cursor, ChatGPT) from generating generic AI-looking UI: oversized `UICorner` roundings, rainbow gradients, and messy button structures. Instead, it enforces a clean, flat, dark design system with sharp corners, native `UIShadow` depth, and decoupled click hitboxes.
 
 [⭐ Star repo](https://github.com/pidaraks1488/ui-roblox-skill)
 
 ---
 
-## Как тут устроена кнопка (Hitbox pattern)
+## The Button Pattern (Hitbox Overlay)
 
-В дефолтном коде от нейросетей обычно создается одиночный `TextButton`, на который накидывают цвет, текст и огромное скругление. Если потом нужно добавить тень, анимацию или поменять дизайн — все разваливается.
+When you ask an AI for a Roblox button, it almost always creates a single `TextButton`, slaps colors and rounding on it, and calls it a day. The moment you want to animate it, restyle the container, or tweak shadows, everything breaks.
 
-Здесь кнопки собираются нормально:
-1. **Frame** — отвечает только за внешний вид (размер, позиция, цвет `Color3.fromRGB(44, 44, 44)`, нулевая рамка `BorderSizePixel = 0`).
-2. **TextLabel** — текст внутри кнопки, шрифт GothamSSm Bold, цвет `Color3.fromRGB(228, 228, 228)`.
-3. **hitbox (TextButton)** — невидимая кнопка поверх всего фрейма (`BackgroundTransparency = 1`, `TextTransparency = 1`), которая перехватывает клики.
+Buttons here decouple the visual container from the click handler:
+1. **Frame** — Handles visuals only (size, position, dark background `Color3.fromRGB(44, 44, 44)`, sharp borders `BorderSizePixel = 0`).
+2. **TextLabel** — Sits inside the Frame. Uses `GothamSSm` Bold, colored `Color3.fromRGB(228, 228, 228)`.
+3. **hitbox (TextButton)** — An invisible overlay covering the entire Frame (`BackgroundTransparency = 1`, `TextTransparency = 1`). All click events (`MouseButton1Click`) attach here.
 
-За счет этого визуал полностью отвязан от скрипта клика: в коде всегда вешаемся на `hitbox.MouseButton1Click`, а сам Frame можно стилизовать как угодно.
+This leaves you free to restyle, animate, or swap the visual Frame without touching the interaction logic.
 
-### Пример обычной кнопки (`ui/basic/button.lua`)
+### Button Example (`ui/basic/button.lua`)
 
 ```lua
 local Players = game:GetService("Players")
@@ -29,7 +29,7 @@ local gui = Instance.new("ScreenGui", playerGui)
 gui.Name = "CustomUI"
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Корпус кнопки
+-- Visual container
 local button = Instance.new("Frame", gui)
 button.Name = "Button"
 button.Size = UDim2.new(0, 150, 0, 50)
@@ -37,7 +37,7 @@ button.Position = UDim2.new(0.5, -75, 0.5, -25)
 button.BackgroundColor3 = Color3.fromRGB(44, 44, 44)
 button.BorderSizePixel = 0
 
--- Текст
+-- Label
 local label = Instance.new("TextLabel", button)
 label.Name = "TextLabel"
 label.Size = UDim2.new(1, -20, 1, 0)
@@ -49,7 +49,7 @@ label.TextColor3 = Color3.fromRGB(228, 228, 228)
 label.TextScaled = true
 label.Text = "BUTTON"
 
--- Хитбокс для кликов
+-- Click hitbox
 local hitbox = Instance.new("TextButton", button)
 hitbox.Name = "hitbox"
 hitbox.Size = UDim2.new(1, 0, 1, 0)
@@ -59,33 +59,33 @@ hitbox.TextTransparency = 1
 hitbox.BorderSizePixel = 0
 
 hitbox.MouseButton1Click:Connect(function()
-    print("Click!")
+    print("Clicked!")
 end)
 ```
 
-### Кнопка с тенью (`ui/basic/button-shadow.lua`)
+### Button with Shadow (`ui/basic/button-shadow.lua`)
 
-Если нужна глубина, внутрь фрейма вешается `UIShadow`. Никаких костылей из полупрозрачных размытых рамок — нативная аккуратная тень.
-
----
-
-## Что лежит в репозитории
-
-Все базовые компоненты лежат в папке `ui/basic/`:
-
-- `button.lua` — плоская кнопка с хитбоксом.
-- `button-shadow.lua` — кнопка с тенью `UIShadow`.
-- `frame.lua` и `frame2` — базовые панели и подложки.
-- `frame2-shadow` — панель с тенью под окна, инвентарь или модалки.
-- `bar.lua` и `bar-full.lua` — статус-бары (здоровье, стамина, опыт).
-- `cube.lua` и `cube-shadow.lua` — квадратные слоты для инвентаря и панелей способностей.
-- `label.lua` и `label-shadow.lua` — заголовки и текстовые блоки.
+For depth, drop a native `UIShadow` inside the Frame. No bloated multi-layer blur hacks.
 
 ---
 
-## Как использовать скилл
+## Included Components
 
-Файл скилла лежит прямо в корне — `SKILL.md` (и его копия в `skill/flatty.md`).
+Reference implementations live under `ui/basic/`:
+
+- `button.lua` — Flat button with hitbox overlay.
+- `button-shadow.lua` — Flat button with native `UIShadow`.
+- `frame.lua` & `frame2` — Base panel containers and backdrops.
+- `frame2-shadow` — Panel with shadow for dialogs, windows, and inventory menus.
+- `bar.lua` & `bar-full.lua` — Progress bars (HP, stamina, experience).
+- `cube.lua` & `cube-shadow.lua` — Square inventory slots and hotbar tiles.
+- `label.lua` & `label-shadow.lua` — Typography and header blocks.
+
+---
+
+## Installation & Usage
+
+The skill prompt is located in `SKILL.md` (mirrored in `skill/flatty.md`).
 
 ### Claude Code
 ```bash
@@ -97,5 +97,5 @@ git clone https://github.com/pidaraks1488/ui-roblox-skill.git ~/.claude/skills/u
 git clone https://github.com/pidaraks1488/ui-roblox-skill.git ~/.gemini/config/skills/ui-roblox-skill
 ```
 
-### Cursor / ChatGPT / другие LLM
-Скопируйте содержимое `SKILL.md` в правила проекта (`.cursorrules`) или системный промпт.
+### Cursor, ChatGPT, or Other LLMs
+Copy the contents of `SKILL.md` into your `.cursorrules`, system instructions, or active chat.
