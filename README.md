@@ -2,7 +2,7 @@
 
 A Luau component reference and LLM skill for Roblox Studio.
 
-Stops models (Claude, Cursor, ChatGPT) from generating generic AI-looking UI: oversized `UICorner` roundings, rainbow gradients, and messy button structures. Instead, it enforces a clean, flat, dark design system with sharp corners, native `UIShadow` depth, and decoupled click hitboxes.
+Stops models (Claude, Cursor, ChatGPT, Copilot) from generating generic AI-looking UI: oversized `UICorner` roundings, rainbow gradients, and messy button structures. Instead, it enforces a clean, flat, dark design system with sharp corners, native `UIShadow` depth, and decoupled click hitboxes.
 
 [⭐ Star repo](https://github.com/pidaraks1488/ui-roblox-skill)
 
@@ -83,9 +83,9 @@ Reference implementations live under `ui/basic/`:
 
 ---
 
-## Installation & Usage
+## Installation & Setup
 
-The skill prompt is located in `SKILL.md` (mirrored in `skill/flatty.md`).
+Pick the command for whatever tool or editor you use:
 
 ### Claude Code
 ```bash
@@ -97,5 +97,40 @@ git clone https://github.com/pidaraks1488/ui-roblox-skill.git ~/.claude/skills/u
 git clone https://github.com/pidaraks1488/ui-roblox-skill.git ~/.gemini/config/skills/ui-roblox-skill
 ```
 
-### Cursor, ChatGPT, or Other LLMs
-Copy the contents of `SKILL.md` into your `.cursorrules`, system instructions, or active chat.
+### Cursor
+Add as project rules so Cursor automatically follows this style for Roblox UI:
+```bash
+# Classic .cursorrules
+curl -s https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md -o .cursorrules
+
+# Modern Cursor rules directory
+mkdir -p .cursor/rules && curl -s https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md -o .cursor/rules/ui-roblox.mdc
+```
+
+### Windsurf / Cascade
+```bash
+curl -s https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md -o .windsurfrules
+```
+
+### GitHub Copilot
+```bash
+mkdir -p .github && curl -s https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md -o .github/copilot-instructions.md
+```
+
+### Aider
+```bash
+aider --read https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md
+```
+
+### ChatGPT / Claude Web / Web LLMs
+One-liner to copy the entire prompt directly to your clipboard:
+```bash
+# macOS
+curl -s https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md | pbcopy
+
+# Linux
+curl -s https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md | xclip -selection clipboard
+
+# Windows (PowerShell)
+(Invoke-WebRequest -Uri "https://raw.githubusercontent.com/pidaraks1488/ui-roblox-skill/main/SKILL.md").Content | Set-Clipboard
+```
