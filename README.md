@@ -1,38 +1,146 @@
-# roblox-flat-ui (Claude skill)
+# 🎮 ui-roblox-skill (Roblox Flat UI)
 
-A skill that stops Claude (or any LLM with skill support) from making up its own Roblox UI style. Instead of guessing at rounded buttons and gradients, it pulls real examples straight from [ui-roblox-skill](https://github.com/pidaraks1488/ui-roblox-skill) and copies that look: flat, dark, sharp corners, no nonsense.
+<div align="center">
 
-[⭐ Star the original repo](https://github.com/pidaraks1488/ui-roblox-skill)
+[![Stars](https://img.shields.io/github/stars/pidaraks1488/ui-roblox-skill?style=for-the-badge&logo=github&color=FFD700)](https://github.com/pidaraks1488/ui-roblox-skill/stargazers)
+[![Forks](https://img.shields.io/github/forks/pidaraks1488/ui-roblox-skill?style=for-the-badge&logo=github&color=58a6ff)](https://github.com/pidaraks1488/ui-roblox-skill/network/members)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Roblox](https://img.shields.io/badge/Roblox-Studio-red?style=for-the-badge&logo=roblox)](https://www.roblox.com)
+[![Luau](https://img.shields.io/badge/Language-Luau-00A2FF?style=for-the-badge)](https://luau.org)
 
-## What it actually does
+<br/>
 
-Normally, if you ask an LLM to "make a Roblox button," it'll invent something — usually rounded corners, some gradient, maybe a random accent color. It doesn't look like it belongs in the same game as the last thing it made you.
+<a href="https://github.com/pidaraks1488/ui-roblox-skill">
+  <img src="https://img.shields.io/badge/⭐_Поставить_звезду_репозиторию-ui--roblox--skill-blue?style=for-the-badge" alt="Star repo button" />
+</a>
 
-This skill tells the model to go fetch the actual `.lua` files from the repo before writing anything, and copy the patterns it finds there: colors, corner style, how shadows are done, the font, how buttons are structured. So instead of "here's a UI I made up," you get "here's a UI in your existing style."
+<p><b>Скилл для AI-ассистентов (Claude, Antigravity, Cursor, ChatGPT), генерирующий чистый, строгий и практичный Flat UI для Roblox Studio без аляповатых градиентов и мыльных закруглений.</b></p>
 
-The reference repo builds buttons in an interesting way worth knowing about: the visible part is a plain `Frame`, and on top of it sits an invisible `TextButton` called `hitbox` that actually catches the click. That way you can change how a button looks without touching the click logic at all.
+</div>
 
-## Installing it
+---
 
-**Claude Code:** drop the `roblox-flat-ui` folder into `~/.claude/skills/`.
+## 💡 В чем проблема и как скилл её решает
 
-```bash
-git clone https://github.com/pidaraks1488/ui-roblox-skill.git
-cp -r ui-roblox-skill/skill/roblox-flat-ui ~/.claude/skills/roblox-flat-ui
+Когда просишь нейросеть: *«напиши код кнопки для Роблокса»*, модель обычно выдумывает случайный аляповатый визуал:
+- сует везде `UICorner` с огромным радиусом;
+- лепит кислотные градиенты (`UIGradient`);
+- мешает стили в одном и том же проекте;
+- не заботится об удобстве архитектуры GUI.
+
+**ui-roblox-skill** решает эту проблему раз и навсегда. Скилл заставляет AI использовать строгую минималистичную дизайн-систему:
+- ⬛ **Строгие формы:** острые углы, `BorderSizePixel = 0`, никаких лишних скруглений.
+- 🎨 **Сдержанная палитра:** глубокие темные тона (`Color3.fromRGB(44, 44, 44)`), выверенная контрастность текста (`Color3.fromRGB(228, 228, 228)`).
+- 🌓 **Реалистичная глубина:** аккуратные тени через `UIShadow`, а не фейковые размытые фреймы.
+- 🎯 **Архитектурный паттерн Hitbox:** отделение визуала от кликов (подробнее ниже).
+
+---
+
+## 🔘 Анатомия правильной кнопки (Hitbox Pattern)
+
+Главная фишка этого дизайн-кода — создание кнопок через оверлей:
+
+```
+┌────────────────────────────────────────┐  ◄── Frame (Визуальный контейнер)
+│                                        │       Цвет: Color3.fromRGB(44, 44, 44)
+│         [ Кнопка / Action ]            │  ◄── TextLabel (Текст)
+│                                        │       GothamSSm Bold, Color3.fromRGB(228, 228, 228)
+├────────────────────────────────────────┤
+│     ░░░░░ Hitbox (TextButton) ░░░░░    │  ◄── Невидимый TextButton поверх всего Frame
+└────────────────────────────────────────┘       BackgroundTransparency = 1, TextTransparency = 1
 ```
 
-**Claude.ai / Cowork:** open Settings → Capabilities → Skills → Add skill, and point it at the `roblox-flat-ui` folder.
+### Почему так?
+1. **Свобода кастомизации:** вы можете полностью перерисовать фон, добавить обводку, анимацию, тени или эффекты на `Frame`, не ломая логику кликов.
+2. **Надежный клик:** невидимый `TextButton` с именем `hitbox` перекрывает всю площадь кнопки и перехватывает клики мыши, тапы на телефонах и консольные триггеры.
+3. **Чистый код логики:** в скриптах вы подключаетесь к `button.hitbox.MouseButton1Click`, а верстка остается независимой.
 
-Either way, just make sure `SKILL.md` sits at the top level of the folder — that's all Claude needs to pick it up.
+---
 
-## Checking it worked
+## 💻 Готовый пример кнопки (Luau)
 
-Ask something like "make me a Roblox button with a shadow." If the skill is active, Claude will go pull `button-shadow.lua` (or similar) from the repo first, then write something that actually matches it — dark flat button, sharp corners, `UIShadow` for depth, a separate hitbox. If it comes back with a rounded neon button, something's off with the install.
+### 1. Стандартная Flat-кнопка (`button.lua`)
+```lua
+local Players = game:GetService("Players")
+local playerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 
-## Why it fetches from GitHub instead of baking in a copy
+local screenGui = Instance.new("ScreenGui", playerGui)
+screenGui.Name = "ButtonGui"
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-The repo can change — new components get added, existing ones get tweaked. Rather than freezing a snapshot in the skill and having it go stale, the skill just tells Claude to look at the repo directly each time. That also means if you fork the repo and change your own style, you can point the skill at your fork and it'll follow whatever you put there.
+-- Визуальная основа кнопки (Frame)
+local buttonFrame = Instance.new("Frame", screenGui)
+buttonFrame.Name = "Button"
+buttonFrame.Size = UDim2.new(0, 150, 0, 50)
+buttonFrame.Position = UDim2.new(0.5, -75, 0.5, -25)
+buttonFrame.BackgroundColor3 = Color3.fromRGB(44, 44, 44)
+buttonFrame.BorderSizePixel = 0
 
-## License
+-- Текст кнопки
+local textLabel = Instance.new("TextLabel", buttonFrame)
+textLabel.Name = "TextLabel"
+textLabel.Size = UDim2.new(1, -20, 1, 0)
+textLabel.Position = UDim2.new(0, 10, 0, 0)
+textLabel.BackgroundTransparency = 1
+textLabel.BorderSizePixel = 0
+textLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+textLabel.TextColor3 = Color3.fromRGB(228, 228, 228)
+textLabel.TextScaled = true
+textLabel.Text = "НАЖМИ МЕНЯ"
 
-MIT.
+-- Невидимый хитбокс для кликов
+local hitbox = Instance.new("TextButton", buttonFrame)
+hitbox.Name = "hitbox"
+hitbox.Size = UDim2.new(1, 0, 1, 0)
+hitbox.Position = UDim2.new(0, 0, 0, 0)
+hitbox.BackgroundTransparency = 1
+hitbox.TextTransparency = 1
+hitbox.BorderSizePixel = 0
+
+-- Обработка клика
+hitbox.MouseButton1Click:Connect(function()
+    print("Кнопка успешно нажата!")
+end)
+```
+
+### 2. Кнопка с тенью (`button-shadow.lua`)
+Добавляет экземпляр `UIShadow` под фрейм, создавая мягкую строгую глубину без размытия и грязи.
+
+---
+
+## 📂 Компоненты в репозитории (`ui/basic/`)
+
+| Файл | Описание | Особенности |
+|------|----------|-------------|
+| [`button.lua`](ui/basic/button.lua) | Стандартная плоская кнопка | Frame + Label (Gotham) + Hitbox |
+| [`button-shadow.lua`](ui/basic/button-shadow.lua) | Кнопка с глубиной | Frame + Label + Hitbox + UIShadow |
+| [`frame.lua`](ui/basic/frame.lua) / [`frame2`](ui/basic/frame2) | Контейнеры и модальные панели | Строгие темные фоновые плашки |
+| [`frame2-shadow`](ui/basic/frame2-shadow) | Панель с объемной тенью | Для меню, инвентарей и диалогов |
+| [`bar.lua`](ui/basic/bar.lua) / [`bar-full.lua`](ui/basic/bar-full.lua) | Полосы прогресса (HP, XP, щиты) | Четкие прямоугольные бары со шкалой |
+| [`cube.lua`](ui/basic/cube.lua) / [`cube-shadow.lua`](ui/basic/cube-shadow.lua) | Квадратные слоты | Для хотбаров, инвентарей, аватар-боксов |
+| [`label.lua`](ui/basic/label.lua) / [`label-shadow.lua`](ui/basic/label-shadow.lua) | Заголовки и текст | GothamSSm, контрастная типографика |
+
+---
+
+## 🚀 Установка скилла
+
+### Вариант 1. Claude Code
+Клонируйте репозиторий или положите скилл в директорию скиллов:
+```bash
+git clone https://github.com/pidaraks1488/ui-roblox-skill.git ~/.claude/skills/ui-roblox-skill
+```
+
+### Вариант 2. Antigravity / Gemini CLI
+Поместите папку скилла в глобальные скиллы:
+```bash
+git clone https://github.com/pidaraks1488/ui-roblox-skill.git ~/.gemini/config/skills/ui-roblox-skill
+```
+
+### Вариант 3. Ручной режим (любая LLM / ChatGPT / Cursor)
+Просто откройте файл [`SKILL.md`](SKILL.md), скопируйте его содержимое в ваши Project Rules / Custom Instructions или просто отправьте в чат нейросети.
+
+---
+
+## 📄 Лицензия
+
+Проект распространяется под свободной лицензией [MIT](LICENSE). Можно использовать в любых коммерческих и личных плейсах Roblox.
